@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Amazon Price Scraper | Justin Lawlor</title>
+  <meta name="description" content="A Python script that records one product&#x27;s price every day into a CSV file, building a price history from scratch.">
+  <link rel="canonical" href="https://justinlawlor.github.io/projects/amazon-price-scraper.html">
+  <!-- Link previews (LinkedIn, Slack, iMessage) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Amazon Price Scraper | Justin Lawlor">
+  <meta property="og:description" content="A Python script that records one product&#x27;s price every day into a CSV file, building a price history from scratch.">
+  <meta property="og:url" content="https://justinlawlor.github.io/projects/amazon-price-scraper.html">
+  <meta property="og:image" content="https://justinlawlor.github.io/assets/img/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body data-page="projects">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <noscript><nav class="side-nav" style="display:flex"><a href="/">Home</a><a href="/experience/">Experience</a><a href="/projects/">Projects</a><a href="/education/">Education &amp; Leadership</a><a href="/certifications/">Certifications</a><a href="/personal/">Personal</a></nav></noscript>
+    </aside>
+    <main class="main" id="main">
+      <section class="page-head">
+        <p class="breadcrumb"><a href="/projects/">Projects</a> / Python / Data collection</p>
+        <h1>Amazon Price Scraper</h1>
+        <p class="lead">A Python script that records one product's price every day into a CSV file, building a price history from scratch.</p>
+      </section>
+      <div class="facts"><div><span class="label">Tutorial</span>Alex the Analyst, <a href="https://www.youtube.com/watch?v=HiOtQMcI5wg">Amazon Web Scraping Using Python</a></div><div><span class="label">Goal</span>Track the price of one product over time</div><div><span class="label">Tools</span>Python, requests, BeautifulSoup, csv, pandas</div><div><span class="label">Data source</span>A public Amazon product page (a pair of headphones)</div><div><span class="label">Full code</span><a href="https://github.com/JustinLawlor/PortforlioProjects/blob/main/Portfolio%20Project%20Webscraping.ipynb">View on GitHub</a></div></div>
+      <div class="project-layout">
+        <nav class="toc" aria-label="On this page"><a href="#overview">Why build it</a><a href="#step-1">1. Request the page</a><a href="#step-2">2. Pull out the title and price</a><a href="#step-3">3. Save each run to a CSV</a><a href="#step-4">4. Run it once a day</a><a href="#results">Output and what I learned</a></nav>
+        <div class="steps">
+          <section class="step" id="overview">
+            <span class="num">Overview</span>
+            <h2>Why build it</h2>
+            <p>Sometimes the data you need doesn't exist as a download. This project collects it: once a day, the script reads the product's title and price and adds a dated row to a CSV, so the history builds up on its own.</p>
+          </section>
+          <section class="step" id="step-1">
+            <span class="num">Step 1</span>
+            <h2>Request the page</h2>
+            <p>Code shortened here; the full version is on GitHub. <strong>What the code does:</strong> sends a request with browser-like headers (Amazon blocks requests that don't look like a browser) and parses the HTML with BeautifulSoup.</p><pre><code>from bs4 import BeautifulSoup
+import requests
+
+URL = &#x27;https://www.amazon.com/dp/B08YJ3W1HB&#x27;
+headers = {&#x27;User-Agent&#x27;: &#x27;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ...&#x27;,
+           &#x27;Accept-Language&#x27;: &#x27;en-US,en;q=0.9&#x27;}
+
+page = requests.get(URL, headers=headers)
+soup = BeautifulSoup(page.content, &#x27;html.parser&#x27;)</code></pre>
+          </section>
+          <section class="step" id="step-2">
+            <span class="num">Step 2</span>
+            <h2>Pull out the title and price</h2>
+            <p><strong>What the code does:</strong> finds the elements by their HTML <code>id</code> and strips the extra whitespace.</p><pre><code>title = soup.find(id=&#x27;productTitle&#x27;).get_text().strip()
+price = soup.find(id=&#x27;corePrice_feature_div&#x27;).get_text().strip()</code></pre><p class="review"><strong>2026 review:</strong> the original cut the price out of a longer string by character position (<code>[16:-247]</code>), which breaks as soon as Amazon changes the page. Reading the price element directly is sturdier.</p>
+          </section>
+          <section class="step" id="step-3">
+            <span class="num">Step 3</span>
+            <h2>Save each run to a CSV</h2>
+            <p><strong>What the code does:</strong> writes a header row once, then appends the title, price and today's date on every run.</p><pre><code>import csv, datetime
+
+today = datetime.date.today()
+with open(&#x27;AmazonWebScrapingDataset.csv&#x27;, &#x27;a+&#x27;, newline=&#x27;&#x27;, encoding=&#x27;UTF8&#x27;) as f:
+    csv.writer(f).writerow([title, price, today])</code></pre>
+          </section>
+          <section class="step" id="step-4">
+            <span class="num">Step 4</span>
+            <h2>Run it once a day</h2>
+            <p><strong>What the code does:</strong> wraps the steps in a <code>check_price()</code> function and calls it every 86,400 seconds (24 hours).</p><pre><code>import time
+
+while True:
+    check_price()
+    time.sleep(86400)</code></pre>
+          </section>
+          <section class="step" id="results">
+            <span class="num">Results</span>
+            <h2>Output and what I learned</h2>
+            <p>A run on October 30, 2026 added this row to the CSV:</p><div class="table-wrap"><table><thead><tr><th>Title</th><th>Price</th><th>Date</th></tr></thead><tbody><tr><td>Bang &amp; Olufsen Beoplay HX Over-Ear Headphones - Timber</td><td>CAD 1,046.04</td><td>2026-10-30</td></tr></tbody></table></div><p>Each daily run adds one more row, so the file becomes a price history. Amazon showed the price in Canadian dollars because the script ran from Canada.</p><h3>What I learned</h3><ul><li>How to request a web page and pull data out of the HTML with BeautifulSoup.</li><li>How to clean scraped text and save it with a date to a CSV.</li><li>How to automate a script with a loop and a timer.</li><li>Scrapers are fragile: sites change their layout and block automated requests, so they need checking.</li></ul>
+          </section>
+          <div class="pager"><a href="/projects/">&larr; All projects</a><a href="/projects/">All projects &rarr;</a></div>
+        </div>
+      </div>
+
+      <footer id="footer"></footer>
+    </main>
+  </div>
+  <script src="/assets/js/projects.js"></script>
+  <script src="/assets/js/site.js"></script>
+</body>
+</html>

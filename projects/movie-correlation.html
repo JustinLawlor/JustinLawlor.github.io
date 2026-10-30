@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Movie Revenue Correlation | Justin Lawlor</title>
+  <meta name="description" content="Testing which features of a movie move with its gross revenue, using pandas, seaborn and matplotlib.">
+  <link rel="canonical" href="https://justinlawlor.github.io/projects/movie-correlation.html">
+  <!-- Link previews (LinkedIn, Slack, iMessage) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Movie Revenue Correlation | Justin Lawlor">
+  <meta property="og:description" content="Testing which features of a movie move with its gross revenue, using pandas, seaborn and matplotlib.">
+  <meta property="og:url" content="https://justinlawlor.github.io/projects/movie-correlation.html">
+  <meta property="og:image" content="https://justinlawlor.github.io/assets/img/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body data-page="projects">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <noscript><nav class="side-nav" style="display:flex"><a href="/">Home</a><a href="/experience/">Experience</a><a href="/projects/">Projects</a><a href="/education/">Education &amp; Leadership</a><a href="/certifications/">Certifications</a><a href="/personal/">Personal</a></nav></noscript>
+    </aside>
+    <main class="main" id="main">
+      <section class="page-head">
+        <p class="breadcrumb"><a href="/projects/">Projects</a> / Python / Analysis</p>
+        <h1>Movie Revenue Correlation</h1>
+        <p class="lead">Testing which features of a movie move with its gross revenue, using pandas, seaborn and matplotlib.</p>
+      </section>
+      <div class="facts"><div><span class="label">Tutorial</span>Alex the Analyst, <a href="https://www.youtube.com/watch?v=iPYVYBtUTyE">Correlation in Python</a></div><div><span class="label">Goal</span>Find what correlates with gross revenue</div><div><span class="label">Tools</span>Python, pandas, NumPy, seaborn, matplotlib, Jupyter</div><div><span class="label">Data source</span><a href="https://www.kaggle.com/danielgrijalvas/movies">Movie Industry dataset on Kaggle</a>, 7,668 films from 1980 to 2020</div><div><span class="label">Full code</span><a href="https://github.com/JustinLawlor/PortforlioProjects/blob/main/Movie%20Correlation%20Project.ipynb">View on GitHub</a></div></div>
+      <div class="project-layout">
+        <nav class="toc" aria-label="On this page"><a href="#overview">The question</a><a href="#step-1">1. Load the data and check for gaps</a><a href="#step-2">2. Fix the release year</a><a href="#step-3">3. Plot budget against gross revenue</a><a href="#step-4">4. Correlation matrix</a><a href="#step-5">5. Does the production company matter?</a><a href="#results">What I found and learned</a></nav>
+        <div class="steps">
+          <section class="step" id="overview">
+            <span class="num">Overview</span>
+            <h2>The question</h2>
+            <p>Each row is a film with its budget, gross revenue, rating, genre, score, votes, director, star, company and more. The question was which of these move together with gross revenue, including whether the production company matters.</p>
+          </section>
+          <section class="step" id="step-1">
+            <span class="num">Step 1</span>
+            <h2>Load the data and check for gaps</h2>
+            <p><strong>What the code does:</strong> reads the CSV, then prints the share of missing values in every column.</p><pre><code>import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+df = pd.read_csv(&#x27;movies.csv&#x27;)
+
+for col in df.columns:
+    pct_missing = np.mean(df[col].isnull())
+    print(f&#x27;{col} - {pct_missing:.1%}&#x27;)</code></pre><p>Budget was the big gap: about 28% of films had no budget. Every other column was close to complete.</p><p class="review"><strong>2026 review:</strong> the original printed the fraction (0.283) with a % sign after it. The format above shows it as a real percentage.</p>
+          </section>
+          <section class="step" id="step-2">
+            <span class="num">Step 2</span>
+            <h2>Fix the release year</h2>
+            <p><strong>Why:</strong> to get the year each film was actually released from the <code>released</code> date. <strong>What the code does:</strong> pulls the four-digit year out of that text.</p><pre><code>df[&#x27;year_correct&#x27;] = df[&#x27;released&#x27;].str.extract(r&#x27;(\d{4})&#x27;)</code></pre><p class="review"><strong>2026 review:</strong> the original took the first four characters of <code>released</code>. Because dates look like "June 13, 1980 (United States)", that produced the month name instead of the year. Extracting the four-digit number fixes it.</p>
+          </section>
+          <section class="step" id="step-3">
+            <span class="num">Step 3</span>
+            <h2>Plot budget against gross revenue</h2>
+            <p><strong>What the code does:</strong> a seaborn regression plot shows each film as a point with a best-fit line.</p><pre><code>sns.regplot(x=&#x27;budget&#x27;, y=&#x27;gross&#x27;, data=df,
+            scatter_kws={&#x27;color&#x27;: &#x27;red&#x27;}, line_kws={&#x27;color&#x27;: &#x27;blue&#x27;})</code></pre><figure><img src="/assets/img/projects/movies/regplot-budget-gross.png" alt="Scatter plot of film budget against gross revenue with an upward best-fit line"><figcaption>Bigger budgets tend to come with bigger grosses, with a lot of spread at the high end.</figcaption></figure>
+          </section>
+          <section class="step" id="step-4">
+            <span class="num">Step 4</span>
+            <h2>Correlation matrix</h2>
+            <p><strong>What the code does:</strong> calculates the Pearson correlation between every pair of numeric columns and draws it as a heatmap.</p><pre><code>correlation_matrix = df.corr(method=&#x27;pearson&#x27;, numeric_only=True)
+sns.heatmap(correlation_matrix, annot=True)
+plt.title(&#x27;Correlation Matrix for Numeric Features&#x27;)
+plt.show()</code></pre><figure><img src="/assets/img/projects/movies/heatmap-numeric.png" alt="Heatmap of correlations between year, score, votes, budget, gross and runtime"><figcaption>Budget and gross: 0.74. Votes and gross: 0.63.</figcaption></figure>
+          </section>
+          <section class="step" id="step-5">
+            <span class="num">Step 5</span>
+            <h2>Does the production company matter?</h2>
+            <p><strong>What the original code did:</strong> turned text columns like company and genre into category codes and added them to the correlation matrix. Company came out near zero.</p><p class="review"><strong>2026 review:</strong> category codes are just alphabetical numbers, so that test can't measure anything. I replaced it with a comparison of average gross for the ten companies with the most films.</p><pre><code>top = df[&#x27;company&#x27;].value_counts().head(10).index
+(df[df[&#x27;company&#x27;].isin(top)]
+   .groupby(&#x27;company&#x27;)[&#x27;gross&#x27;].agg([&#x27;count&#x27;, &#x27;mean&#x27;])
+   .sort_values(&#x27;mean&#x27;, ascending=False))</code></pre><p>The averages range from about $60M (TriStar Pictures) to about $295M (Walt Disney Pictures), so company does matter on average. Big studios also spend more, so budget explains part of that gap.</p>
+          </section>
+          <section class="step" id="results">
+            <span class="num">Results</span>
+            <h2>What I found and learned</h2>
+            <p>Budget had the strongest relationship with gross revenue (0.74), followed by the number of votes (0.63). Production company matters more than the original version suggested once it is measured properly. About a quarter of films had no budget, and correlation only shows that two things move together, not that one causes the other.</p><h3>What I learned</h3><ul><li>How to load and inspect a dataset in pandas and check how much is missing.</li><li>How to plot relationships with matplotlib and seaborn.</li><li>How to read a correlation matrix, and that correlation is not causation.</li><li>Looking back: check how a test works before trusting its result. The category-code test said company didn't matter, and it did.</li></ul>
+          </section>
+          <div class="pager"><a href="/projects/">&larr; All projects</a><a href="/projects/amazon-price-scraper.html">Next: Amazon Price Scraper &rarr;</a></div>
+        </div>
+      </div>
+
+      <footer id="footer"></footer>
+    </main>
+  </div>
+  <script src="/assets/js/projects.js"></script>
+  <script src="/assets/js/site.js"></script>
+</body>
+</html>

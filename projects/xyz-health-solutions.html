@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unified IT System for XYZ Health Solutions | Justin Lawlor</title>
+  <meta name="description" content="Planning, requirements, process and data models, and test, deployment and monitoring plans for one integrated healthcare platform. IBM Systems Analyst capstone, October 2026.">
+  <link rel="canonical" href="https://justinlawlor.github.io/projects/xyz-health-solutions.html">
+  <!-- Link previews (LinkedIn, Slack, iMessage) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Unified IT System for XYZ Health Solutions | Justin Lawlor">
+  <meta property="og:description" content="Planning, requirements, process and data models, and test, deployment and monitoring plans for one integrated healthcare platform. IBM Systems Analyst capstone, October 2026.">
+  <meta property="og:url" content="https://justinlawlor.github.io/projects/xyz-health-solutions.html">
+  <meta property="og:image" content="https://justinlawlor.github.io/assets/img/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body data-page="projects">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <noscript><nav class="side-nav" style="display:flex"><a href="/">Home</a><a href="/experience/">Experience</a><a href="/projects/">Projects</a><a href="/education/">Education &amp; Leadership</a><a href="/certifications/">Certifications</a><a href="/personal/">Personal</a></nav></noscript>
+    </aside>
+    <main class="main" id="main">
+      <section class="page-head">
+        <p class="breadcrumb"><a href="/projects/">Projects</a> / Systems analysis / Case study</p>
+        <h1>Unified IT System for XYZ Health Solutions</h1>
+        <p class="lead">Planning, requirements, process and data models, and test, deployment and monitoring plans for one integrated healthcare platform. IBM Systems Analyst capstone, October 2026.</p>
+      </section>
+      <div class="facts"><div><span class="label">Role</span>Systems Analyst (course project, solo)</div><div><span class="label">Timeline</span>About 2 weeks, October 2026</div><div><span class="label">Scope</span>Records, scheduling and billing for a simulated provider</div><div><span class="label">Tools</span>draw.io, Excel, Power BI, MySQL (design)</div></div>
+      <div class="project-layout">
+        <nav class="toc" aria-label="On this page"><a href="#the-problem">The problem</a><a href="#requirements-gathering-and-planning">Requirements gathering and planning</a><a href="#process-and-system-design">Process and system design</a><a href="#data-design">Data design</a><a href="#data-analysis">Data analysis</a><a href="#testing">Testing</a><a href="#validation">Validation</a><a href="#deployment-and-monitoring-plan">Deployment and monitoring plan</a><a href="#impact-and-what-i-learned">Impact and what I learned</a></nav>
+        <div class="steps">
+          <section class="step" id="the-problem">
+            <h2>The problem</h2>
+            <p>XYZ Health Solutions ran patient records, appointment scheduling and billing in three separate systems. Staff re-entered data by hand, errors slipped through, nobody had a real-time view of the patient, and the scattered data created HIPAA risk. The goal was one integrated platform on MySQL with a data warehouse and dashboards, under HIPAA governance.</p>
+							<p>The main stakeholders were the CEO (project sponsor), the project lead, the IT director, clinical operations, patient services, a data analyst, and the patients themselves.</p>
+          </section>
+          <section class="step" id="requirements-gathering-and-planning">
+            <h2>Requirements gathering and planning</h2>
+            <p>I planned four ways to gather requirements: patient surveys, clinician workshops, admin interviews and IT technical workshops. From there I wrote:</p>
+							<ul>
+								<li>A project charter, stakeholder register and engagement plan</li>
+								<li>A business requirements document with 5 functional and 3 non-functional requirements</li>
+								<li>A requirements traceability matrix linking each requirement to its objective, owner, risk, verification method and test case</li>
+								<li>A WBS (3 phases, 9 work packages), a network diagram with a critical path of about 7 months, a SWOT analysis, and a risk register scored by probability times impact</li>
+							</ul>
+          </section>
+          <section class="step" id="process-and-system-design">
+            <h2>Process and system design</h2>
+            <p>I mapped the core process, appointment scheduling, as a swimlane flowchart across Patient Services, the Clinical Department and the Scheduling System. It has five decision points, with loops for a failed login, an unavailable slot, missing fields, invalid input and a failed confirmation.</p>
+							<figure><img src="/assets/img/case-study/scheduling-flowchart.png" alt="Appointment scheduling swimlane flowchart"><figcaption>Figure 1: Appointment scheduling flowchart. It shows every point where a booking can fail and what the system does next, which became the basis for the test cases.</figcaption></figure>
+							<p>I also built a context diagram, a Level 1 data flow diagram, a use case diagram and a sequence diagram for booking an appointment.</p>
+							<figure><img src="/assets/img/case-study/level1-dfd.png" alt="Level 1 data flow diagram"><figcaption>Figure 2: Level 1 DFD with four processes (register patient, book appointment, manage records, process billing) and three data stores. It shows which process reads and writes each store.</figcaption></figure>
+          </section>
+          <section class="step" id="data-design">
+            <h2>Data design</h2>
+            <p>The database has five tables: Patient, Staff, Appointment, Medical Record and Billing, documented in a 24-field data dictionary.</p>
+							<figure><img src="/assets/img/case-study/logical-erd.png" alt="Logical entity relationship diagram"><figcaption>Figure 3: Logical ERD in crow's foot notation, before normalization. Billing still carries PatientID here, which the 3NF step removed.</figcaption></figure>
+							<p>The key design decision was taking PatientID out of Billing. The patient can already be found through the appointment (BillingID to AppointmentID to PatientID), so keeping it was a transitive dependency. I made AppointmentID unique in Billing to keep one bill per appointment, which brought the design to 3NF. CHECK constraints block negative amounts and invalid status values.</p>
+							<div class="table-wrap">
+								<table>
+									<thead><tr><th>Table</th><th>Column</th><th>Type</th><th>Constraints</th></tr></thead>
+									<tbody>
+										<tr><td>Appointment</td><td>AppointmentID</td><td>INT</td><td>PK, NOT NULL, AUTO_INCREMENT</td></tr>
+										<tr><td>Appointment</td><td>PatientID</td><td>INT</td><td>FK to Patient, NOT NULL</td></tr>
+										<tr><td>Appointment</td><td>Status</td><td>VARCHAR(20)</td><td>CHECK IN ('Scheduled','Completed','Cancelled','No-show')</td></tr>
+										<tr><td>Billing</td><td>BillingID</td><td>INT</td><td>PK, NOT NULL, AUTO_INCREMENT</td></tr>
+										<tr><td>Billing</td><td>AppointmentID</td><td>INT</td><td>FK to Appointment, UNIQUE, NOT NULL</td></tr>
+										<tr><td>Billing</td><td>Amount</td><td>DECIMAL(10,2)</td><td>NOT NULL, CHECK (Amount &gt;= 0)</td></tr>
+										<tr><td>Billing</td><td>PaymentStatus</td><td>VARCHAR(20)</td><td>CHECK IN ('Pending','Paid','Overdue')</td></tr>
+									</tbody>
+								</table>
+							</div>
+          </section>
+          <section class="step" id="data-analysis">
+            <h2>Data analysis</h2>
+            <p>I cleaned 20-record patient and appointment datasets in Excel (duplicates, missing values, date formats, location names) and added age and month fields. Then I built PivotTable charts and Power BI dashboards. Some findings:</p>
+							<ul>
+								<li>20% of patient records were missing an email address and 2 were missing a date of birth</li>
+								<li>$135,900 was outstanding, 77% of it on individual accounts</li>
+								<li>55% of patients were in the US, and the New York clinic brought in 39% of recorded revenue</li>
+							</ul>
+							<figure><img src="/assets/img/case-study/powerbi-location-map.png" alt="Power BI map of appointments by location"><figcaption>Figure 4: Power BI map of appointments by location. Most appointments came from the US, in line with the 55% of patients based there.</figcaption></figure>
+          </section>
+          <section class="step" id="testing">
+            <h2>Testing</h2>
+            <p>I reviewed a draft test plan for the booking requirement (REQ-APPT-01), added missing preconditions, and wrote four new test cases: invalid login, duplicate booking, unauthenticated access and session timeout. I also changed the error messages to a generic "Invalid PatientID or credentials." so the system never reveals which patient IDs exist.</p>
+							<p><strong>TDD objective:</strong> block a PatientID after three failed booking attempts in a row, reject a fourth request during the lockout even with correct credentials, and write the attempt to the audit log.</p>
+							<pre><code>Scenario: Booking is rejected for a PatientID that is not registered
+  Given no patient account exists for PatientID "P99999"
+  When a user enters PatientID "P99999" and any credentials
+  And clicks "Book"
+  Then the booking is rejected
+  And the error "Invalid PatientID or credentials." is displayed
+  And no patient data is shown
+  And the failed attempt is recorded in the audit log</code></pre>
+							<p>Edge cases I flagged: picking an unavailable slot should not count as a failed attempt, the failed-attempt count has to be stored on the server so a page refresh can't reset it, and the booking page needs rate limiting against bots.</p>
+          </section>
+          <section class="step" id="validation">
+            <h2>Validation</h2>
+            <p>The final presentation was peer-reviewed against a published rubric. Before submitting, I checked the deck against that rubric and added what was missing: the full traceability matrix columns, risk register fields, test case traceability and edge cases. User acceptance testing with clinic staff is part of the release plan below but was not performed, since this was a course project.</p>
+          </section>
+          <section class="step" id="deployment-and-monitoring-plan">
+            <h2>Deployment and monitoring plan</h2>
+            <p>I designed a 9-stage release pipeline from code commit to post-deployment checks, with automated stages in Jenkins or GitHub Actions and six checkpoints where an analyst reviews the work: requirement check, test results, logs and error messages, UAT sign-off, go/no-go, and the first 24 hours after release.</p>
+							<p>The monitoring plan defines seven metrics with thresholds: uptime, booking error rate, unauthorized access attempts, lockouts, response time, double bookings and audit log health. Alerts would go through Datadog, Slack, PagerDuty and Jira, with a daily, weekly and monthly maintenance checklist and a four-level incident severity workflow. All of this is planned, not running.</p>
+          </section>
+          <section class="step" id="impact-and-what-i-learned">
+            <h2>Impact and what I learned</h2>
+            <p>The project produced a full analysis package: charter, BRD, traceability matrix, risk register, process and data models, a test plan and a release plan. The project's targets were 100% HIPAA compliance, 20% fewer scheduling errors, 25% fewer data-entry errors and a 10% rise in patient satisfaction within 12 months. These are targets set in the plan, not measured results.</p>
+							<ul>
+								<li><strong>Read the rubric first.</strong> The rubric asked for fields the lab steps never mentioned. I only caught them because I checked before submitting.</li>
+								<li><strong>Check the math in templates.</strong> The risk scores had been added instead of multiplied. Fixing it moved two risks onto the urgent list.</li>
+								<li><strong>Save every artifact as soon as it's done.</strong> The scheduling flowchart was never saved and had to be rebuilt from the stages table. Now I keep each diagram's source file and image export together.</li>
+								<li><strong>Security shows up in small details.</strong> A generic error message is what stops the system from revealing which patient IDs exist.</li>
+							</ul>
+          </section>
+          <div class="pager"><a href="/projects/">&larr; All projects</a><a href="/projects/tsw-returns-app.html">Next: Returns App for a Food Distributor &rarr;</a></div>
+        </div>
+      </div>
+
+      <footer id="footer"></footer>
+    </main>
+  </div>
+  <script src="/assets/js/projects.js"></script>
+  <script src="/assets/js/site.js"></script>
+</body>
+</html>

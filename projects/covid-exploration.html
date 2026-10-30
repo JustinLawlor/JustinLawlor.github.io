@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>COVID-19 Data Exploration | Justin Lawlor</title>
+  <meta name="description" content="Exploring global COVID-19 cases, deaths and vaccinations in SQL Server, then saving the results for a Tableau dashboard.">
+  <link rel="canonical" href="https://justinlawlor.github.io/projects/covid-exploration.html">
+  <!-- Link previews (LinkedIn, Slack, iMessage) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="COVID-19 Data Exploration | Justin Lawlor">
+  <meta property="og:description" content="Exploring global COVID-19 cases, deaths and vaccinations in SQL Server, then saving the results for a Tableau dashboard.">
+  <meta property="og:url" content="https://justinlawlor.github.io/projects/covid-exploration.html">
+  <meta property="og:image" content="https://justinlawlor.github.io/assets/img/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body data-page="projects">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <noscript><nav class="side-nav" style="display:flex"><a href="/">Home</a><a href="/experience/">Experience</a><a href="/projects/">Projects</a><a href="/education/">Education &amp; Leadership</a><a href="/certifications/">Certifications</a><a href="/personal/">Personal</a></nav></noscript>
+    </aside>
+    <main class="main" id="main">
+      <section class="page-head">
+        <p class="breadcrumb"><a href="/projects/">Projects</a> / SQL / Exploration</p>
+        <h1>COVID-19 Data Exploration</h1>
+        <p class="lead">Exploring global COVID-19 cases, deaths and vaccinations in SQL Server, then saving the results for a Tableau dashboard.</p>
+      </section>
+      <div class="facts"><div><span class="label">Tutorial</span>Alex the Analyst, <a href="https://www.youtube.com/watch?v=qfyynHBFOsM">SQL Data Exploration</a></div><div><span class="label">Goal</span>Compare infection, death and vaccination rates by country and continent</div><div><span class="label">Tools</span>SQL Server (T-SQL)</div><div><span class="label">Data source</span><a href="https://ourworldindata.org/covid-deaths">Our World in Data</a>, via <a href="https://github.com/AlexTheAnalyst/PortfolioProjects/blob/main/CovidDeaths.xlsx">CovidDeaths</a> and <a href="https://github.com/AlexTheAnalyst/PortfolioProjects/blob/main/CovidVaccinations.xlsx">CovidVaccinations</a></div><div><span class="label">Full code</span><a href="https://github.com/JustinLawlor/PortforlioProjects/blob/main/COVID%20Portfolio%20Projects%20Actual%20Script.sql">View on GitHub</a></div></div>
+      <div class="project-layout">
+        <nav class="toc" aria-label="On this page"><a href="#overview">The questions</a><a href="#step-1">1. Death rate among cases</a><a href="#step-2">2. Share of the population infected</a><a href="#step-3">3. Deaths by country and continent</a><a href="#step-4">4. Global totals</a><a href="#step-5">5. Rolling vaccinations with a window function</a><a href="#step-6">6. Percent vaccinated with a CTE and a temp table</a><a href="#step-7">7. Save a view for the dashboard</a><a href="#results">What I found and learned</a></nav>
+        <div class="steps">
+          <section class="step" id="overview">
+            <span class="num">Overview</span>
+            <h2>The questions</h2>
+            <p>Two tables, one for cases and deaths and one for vaccinations, both by country and date. I wanted to answer: how likely was death after infection, what share of each population was infected, which countries and continents had the most deaths, and how quickly were people vaccinated.</p><p>The data has rows for whole continents mixed in with countries. Those rows have a blank <code>continent</code>, so most queries filter them out.</p>
+          </section>
+          <section class="step" id="step-1">
+            <span class="num">Step 1</span>
+            <h2>Death rate among cases</h2>
+            <p><strong>What the code does:</strong> divides total deaths by total cases for each day, shown here for Canada.</p><pre><code>SELECT location, date, total_cases, total_deaths,
+       (total_deaths / total_cases) * 100 AS DeathPercentage
+FROM PortfolioProject1.dbo.CovidDeaths
+WHERE location LIKE &#x27;%canada%&#x27; AND continent IS NOT NULL
+ORDER BY 1, 2;</code></pre>
+          </section>
+          <section class="step" id="step-2">
+            <span class="num">Step 2</span>
+            <h2>Share of the population infected</h2>
+            <p><strong>What the code does:</strong> divides total cases by population, then finds each country's highest value.</p><pre><code>SELECT location, population,
+       MAX(total_cases) AS HighestInfectionCount,
+       MAX(total_cases / population) * 100 AS PopulationInfectedPercentage
+FROM PortfolioProject1.dbo.CovidDeaths
+GROUP BY location, population
+ORDER BY PopulationInfectedPercentage DESC;</code></pre>
+          </section>
+          <section class="step" id="step-3">
+            <span class="num">Step 3</span>
+            <h2>Deaths by country and continent</h2>
+            <p><strong>What the code does:</strong> takes the highest running death total for each country, then for each continent. <code>total_deaths</code> was stored as text, so it is cast to a number first or the sort comes out wrong.</p><pre><code>SELECT continent, MAX(CAST(total_deaths AS INT)) AS TotalDeathCount
+FROM PortfolioProject1.dbo.CovidDeaths
+WHERE NOT continent = &#x27;&#x27;
+GROUP BY continent
+ORDER BY TotalDeathCount DESC;</code></pre>
+          </section>
+          <section class="step" id="step-4">
+            <span class="num">Step 4</span>
+            <h2>Global totals</h2>
+            <p><strong>What the code does:</strong> adds up daily new cases and deaths across all countries to get one global death rate. These are the figures shown at the top of the dashboard.</p><pre><code>SELECT SUM(new_cases) AS total_cases,
+       SUM(CAST(new_deaths AS INT)) AS total_deaths,
+       SUM(CAST(new_deaths AS INT)) / SUM(new_cases) * 100 AS DeathPercentage
+FROM PortfolioProject1.dbo.CovidDeaths
+WHERE NOT continent = &#x27;&#x27;;</code></pre>
+          </section>
+          <section class="step" id="step-5">
+            <span class="num">Step 5</span>
+            <h2>Rolling vaccinations with a window function</h2>
+            <p><strong>What the code does:</strong> joins deaths to vaccinations on country and date, then uses <code>SUM ... OVER (PARTITION BY ...)</code> to keep a running total of vaccinations for each country.</p><pre><code>SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations,
+       SUM(CONVERT(BIGINT, vac.new_vaccinations))
+         OVER (PARTITION BY dea.location ORDER BY dea.location, dea.date) AS RollingPeopleVaccinated
+FROM PortfolioProject1.dbo.CovidDeaths dea
+JOIN PortfolioProject1.dbo.CovidVaccinations vac
+  ON dea.location = vac.location AND dea.date = vac.date
+WHERE NOT dea.continent = &#x27;&#x27;
+ORDER BY 2, 3;</code></pre>
+          </section>
+          <section class="step" id="step-6">
+            <span class="num">Step 6</span>
+            <h2>Percent vaccinated with a CTE and a temp table</h2>
+            <p><strong>Why:</strong> SQL won't let you use a column alias you just created in the same <code>SELECT</code>, so the running total can't be divided by population directly. <strong>What the code does:</strong> wraps the query in a CTE, then divides in the outer query. The script also builds the same result as a temp table.</p><pre><code>WITH PopVsVac (Continent, Location, Date, Population, New_Vaccinations, RollingPeopleVaccinated) AS (
+  SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations,
+         SUM(CONVERT(BIGINT, vac.new_vaccinations))
+           OVER (PARTITION BY dea.location ORDER BY dea.location, dea.date)
+  FROM PortfolioProject1.dbo.CovidDeaths dea
+  JOIN PortfolioProject1.dbo.CovidVaccinations vac ON dea.location = vac.location AND dea.date = vac.date
+  WHERE NOT dea.continent = &#x27;&#x27;
+)
+SELECT *, (RollingPeopleVaccinated / Population) * 100 AS PercentVaccinated
+FROM PopVsVac;</code></pre>
+          </section>
+          <section class="step" id="step-7">
+            <span class="num">Step 7</span>
+            <h2>Save a view for the dashboard</h2>
+            <p><strong>What the code does:</strong> stores the rolling vaccination query as a view, so a visualization tool can read it like a table.</p><pre><code>CREATE VIEW PercentPopulationVaccinated AS
+SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations,
+       SUM(CONVERT(BIGINT, vac.new_vaccinations))
+         OVER (PARTITION BY dea.location ORDER BY dea.location, dea.date) AS RollingPeopleVaccinated
+FROM PortfolioProject1.dbo.CovidDeaths dea
+JOIN PortfolioProject1.dbo.CovidVaccinations vac ON dea.location = vac.location AND dea.date = vac.date
+WHERE NOT dea.continent = &#x27;&#x27;;</code></pre><p class="review"><strong>2026 review:</strong> the original script names this view and the temp table <code>PercentPopulationVaccinatd</code> (a typo). It is spelled out in full here.</p>
+          </section>
+          <section class="step" id="results">
+            <span class="num">Results</span>
+            <h2>What I found and learned</h2>
+            <p>Across the data, there were about 597 million cases and 6.44 million deaths, a death rate of about 1.08% among recorded cases. Europe had the highest death count of any continent. These results feed the <a href="/projects/covid-dashboard.html">Tableau dashboard</a>.</p><h3>What I learned</h3><ul><li>How to filter and summarize large tables with <code>WHERE</code>, <code>GROUP BY</code>, <code>MAX</code> and <code>SUM</code>.</li><li>Why data types matter: numbers stored as text sort wrong until you <code>CAST</code> them.</li><li>How to join two tables on more than one column (country and date).</li><li>How window functions keep a running total without collapsing the rows.</li><li>The difference between a CTE, a temp table and a view, and why a view is handy for feeding a dashboard.</li></ul>
+          </section>
+          <div class="pager"><a href="/projects/">&larr; All projects</a><a href="/projects/covid-dashboard.html">Next: COVID-19 Tableau Dashboard &rarr;</a></div>
+        </div>
+      </div>
+
+      <footer id="footer"></footer>
+    </main>
+  </div>
+  <script src="/assets/js/projects.js"></script>
+  <script src="/assets/js/site.js"></script>
+</body>
+</html>

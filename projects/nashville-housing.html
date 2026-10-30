@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nashville Housing Data Cleaning | Justin Lawlor</title>
+  <meta name="description" content="Turning a raw export of Nashville home sales into analysis-ready data in SQL Server, one step at a time.">
+  <link rel="canonical" href="https://justinlawlor.github.io/projects/nashville-housing.html">
+  <!-- Link previews (LinkedIn, Slack, iMessage) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Nashville Housing Data Cleaning | Justin Lawlor">
+  <meta property="og:description" content="Turning a raw export of Nashville home sales into analysis-ready data in SQL Server, one step at a time.">
+  <meta property="og:url" content="https://justinlawlor.github.io/projects/nashville-housing.html">
+  <meta property="og:image" content="https://justinlawlor.github.io/assets/img/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body data-page="projects">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <noscript><nav class="side-nav" style="display:flex"><a href="/">Home</a><a href="/experience/">Experience</a><a href="/projects/">Projects</a><a href="/education/">Education &amp; Leadership</a><a href="/certifications/">Certifications</a><a href="/personal/">Personal</a></nav></noscript>
+    </aside>
+    <main class="main" id="main">
+      <section class="page-head">
+        <p class="breadcrumb"><a href="/projects/">Projects</a> / SQL / Data cleaning</p>
+        <h1>Nashville Housing Data Cleaning</h1>
+        <p class="lead">Turning a raw export of Nashville home sales into analysis-ready data in SQL Server, one step at a time.</p>
+      </section>
+      <div class="facts"><div><span class="label">Tutorial</span>Alex the Analyst, <a href="https://www.youtube.com/watch?v=8rO7ztF4NtU">Data Cleaning in SQL</a></div><div><span class="label">Goal</span>Make the dataset consistent and usable for analysis</div><div><span class="label">Tools</span>SQL Server (T-SQL)</div><div><span class="label">Data source</span><a href="https://github.com/AlexTheAnalyst/PortfolioProjects/blob/main/Nashville%20Housing%20Data%20for%20Data%20Cleaning.xlsx">Nashville housing dataset</a> (Alex the Analyst)</div><div><span class="label">Full code</span><a href="https://github.com/JustinLawlor/PortforlioProjects/blob/main/Nashville%20Housing%20Data%20Cleaning.sql">View on GitHub</a></div></div>
+      <div class="project-layout">
+        <nav class="toc" aria-label="On this page"><a href="#overview">The problem</a><a href="#step-1">1. Standardize the sale date</a><a href="#step-2">2. Fill in missing property addresses</a><a href="#step-3">3. Split the property address into columns</a><a href="#step-4">4. Split the owner address with PARSENAME</a><a href="#step-5">5. Make Yes/No values consistent</a><a href="#step-6">6. Remove duplicate sales</a><a href="#step-7">7. Drop the columns that were replaced</a><a href="#results">What I learned</a></nav>
+        <div class="steps">
+          <section class="step" id="overview">
+            <span class="num">Overview</span>
+            <h2>The problem</h2>
+            <p>The raw table had a date stored with a time, missing property addresses, whole addresses crammed into one column, inconsistent Yes/No values and duplicate sales. Each step below fixes one of those problems, explains why, and shows the code.</p>
+          </section>
+          <section class="step" id="step-1">
+            <span class="num">Step 1</span>
+            <h2>Standardize the sale date</h2>
+            <p><strong>Why:</strong> <code>SaleDate</code> was stored as a date and time, which makes grouping by day awkward. <strong>What the code does:</strong> adds a new date-only column and fills it from <code>SaleDate</code>.</p><pre><code>ALTER TABLE NashvilleHousing
+ADD SaleDateConverted Date;
+
+UPDATE NashvilleHousing
+SET SaleDateConverted = CONVERT(Date, SaleDate);</code></pre>
+          </section>
+          <section class="step" id="step-2">
+            <span class="num">Step 2</span>
+            <h2>Fill in missing property addresses</h2>
+            <p><strong>Why:</strong> some rows had no <code>PropertyAddress</code>, but another row with the same <code>ParcelID</code> did. <strong>What the code does:</strong> joins the table to itself on <code>ParcelID</code> (different <code>UniqueID</code>) and copies the address across wherever it is missing.</p><pre><code>UPDATE a
+SET PropertyAddress = ISNULL(a.PropertyAddress, b.PropertyAddress)
+FROM PortfolioProject1.dbo.NashvilleHousing a
+JOIN PortfolioProject1.dbo.NashvilleHousing b
+  ON a.ParcelID = b.ParcelID
+  AND a.[UniqueID] &lt;&gt; b.[UniqueID]
+WHERE a.PropertyAddress IS NULL;</code></pre>
+          </section>
+          <section class="step" id="step-3">
+            <span class="num">Step 3</span>
+            <h2>Split the property address into columns</h2>
+            <p><strong>Why:</strong> street and city were in one field, separated by a comma. <strong>What the code does:</strong> finds the comma with <code>CHARINDEX</code> and uses <code>SUBSTRING</code> to cut the text on either side into two new columns.</p><pre><code>ALTER TABLE NashvilleHousing ADD PropertySplitAddress NVARCHAR(255);
+UPDATE NashvilleHousing
+SET PropertySplitAddress = SUBSTRING(PropertyAddress, 1, CHARINDEX(&#x27;,&#x27;, PropertyAddress) - 1);
+
+ALTER TABLE NashvilleHousing ADD PropertySplitCity NVARCHAR(255);
+UPDATE NashvilleHousing
+SET PropertySplitCity = LTRIM(SUBSTRING(PropertyAddress, CHARINDEX(&#x27;,&#x27;, PropertyAddress) + 1, LEN(PropertyAddress)));</code></pre><p class="review"><strong>2026 review:</strong> the original <code>UPDATE</code> for the street started the substring at the comma instead of at position 1, so the new column held the wrong text. The code above is the corrected version, and <code>LTRIM</code> removes the space left after the comma.</p>
+          </section>
+          <section class="step" id="step-4">
+            <span class="num">Step 4</span>
+            <h2>Split the owner address with PARSENAME</h2>
+            <p><strong>Why:</strong> the owner address had street, city and state in one field. <strong>What the code does:</strong> <code>PARSENAME</code> splits text on periods, so the commas are swapped for periods first. It counts from the right, which is why the street is part 3 and the state is part 1.</p><pre><code>ALTER TABLE NashvilleHousing ADD OwnerSplitAddress NVARCHAR(255);
+UPDATE NashvilleHousing SET OwnerSplitAddress = PARSENAME(REPLACE(OwnerAddress, &#x27;,&#x27;, &#x27;.&#x27;), 3);
+
+ALTER TABLE NashvilleHousing ADD OwnerSplitCity NVARCHAR(255);
+UPDATE NashvilleHousing SET OwnerSplitCity = PARSENAME(REPLACE(OwnerAddress, &#x27;,&#x27;, &#x27;.&#x27;), 2);
+
+ALTER TABLE NashvilleHousing ADD OwnerSplitState NVARCHAR(255);
+UPDATE NashvilleHousing SET OwnerSplitState = PARSENAME(REPLACE(OwnerAddress, &#x27;,&#x27;, &#x27;.&#x27;), 1);</code></pre>
+          </section>
+          <section class="step" id="step-5">
+            <span class="num">Step 5</span>
+            <h2>Make Yes/No values consistent</h2>
+            <p><strong>Why:</strong> <code>SoldAsVacant</code> mixed Y, N, Yes and No. A quick <code>GROUP BY</code> count showed the mix first. <strong>What the code does:</strong> a <code>CASE</code> statement rewrites each value.</p><pre><code>UPDATE NashvilleHousing
+SET SoldAsVacant = CASE WHEN SoldAsVacant = &#x27;Y&#x27; THEN &#x27;Yes&#x27;
+                        WHEN SoldAsVacant = &#x27;N&#x27; THEN &#x27;No&#x27;
+                        ELSE SoldAsVacant
+                   END;</code></pre>
+          </section>
+          <section class="step" id="step-6">
+            <span class="num">Step 6</span>
+            <h2>Remove duplicate sales</h2>
+            <p><strong>Why:</strong> the same sale appeared more than once with different IDs. <strong>What the code does:</strong> <code>ROW_NUMBER</code> numbers rows that share the same parcel, address, price, date and legal reference. Any row numbered 2 or higher is a duplicate and gets deleted through the CTE.</p><pre><code>WITH RowNumCTE AS (
+  SELECT *,
+         ROW_NUMBER() OVER (
+           PARTITION BY ParcelID, PropertyAddress, SalePrice, SaleDate, LegalReference
+           ORDER BY UniqueID
+         ) AS row_num
+  FROM PortfolioProject1.dbo.NashvilleHousing
+)
+DELETE FROM RowNumCTE
+WHERE row_num &gt; 1;</code></pre><p class="review"><strong>2026 review:</strong> the original script ended this <code>DELETE</code> with <code>ORDER BY PropertyAddress</code>, which SQL Server doesn't allow, so it has been removed.</p>
+          </section>
+          <section class="step" id="step-7">
+            <span class="num">Step 7</span>
+            <h2>Drop the columns that were replaced</h2>
+            <p><strong>Why:</strong> once the split and converted columns existed, the originals were redundant. <strong>What the code does:</strong> drops them.</p><pre><code>ALTER TABLE PortfolioProject1.dbo.NashvilleHousing
+DROP COLUMN OwnerAddress, TaxDistrict, PropertyAddress, SaleDate;</code></pre>
+          </section>
+          <section class="step" id="results">
+            <span class="num">Results</span>
+            <h2>What I learned</h2>
+            <p>The table now has a clean date column, no missing property addresses, separate street, city and state columns, consistent Yes/No values and no duplicate sales.</p><h3>What I learned</h3><ul><li>How to change a table with <code>ALTER TABLE</code> and fill new columns with <code>UPDATE</code>.</li><li>How to join a table to itself to fill gaps using matching rows.</li><li>How to split one text field into several with <code>SUBSTRING</code>, <code>CHARINDEX</code> and <code>PARSENAME</code>.</li><li>How to find and delete duplicates with <code>ROW_NUMBER</code> inside a CTE.</li><li>Looking back: check the new column after every update. A quick look would have caught the address-split bug.</li></ul>
+          </section>
+          <div class="pager"><a href="/projects/">&larr; All projects</a><a href="/projects/covid-exploration.html">Next: COVID-19 Data Exploration &rarr;</a></div>
+        </div>
+      </div>
+
+      <footer id="footer"></footer>
+    </main>
+  </div>
+  <script src="/assets/js/projects.js"></script>
+  <script src="/assets/js/site.js"></script>
+</body>
+</html>
