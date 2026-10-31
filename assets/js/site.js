@@ -15,7 +15,7 @@
 
   // Privacy-friendly analytics (GoatCounter: no cookies, no personal data).
   // Sign up at goatcounter.com, then put your site code here, e.g. "justinlawlor".
-  var GOATCOUNTER_CODE = "";
+  var GOATCOUNTER_CODE = "justinlawlor";
 
   var page = document.body.getAttribute("data-page") || "";
 
@@ -34,8 +34,7 @@
       '<nav class="side-nav" id="side-nav" aria-label="Main">' + links + "</nav>" +
       '<div class="side-links">' +
       '<a href="https://www.linkedin.com/in/justinlawlor">LinkedIn</a>' +
-      '<a href="https://github.com/JustinLawlor">GitHub</a>' +
-      '<a href="mailto:justin.lawlor889@gmail.com">Email</a></div>';
+      '<a href="https://github.com/JustinLawlor">GitHub</a></div>';
     var toggle = side.querySelector(".menu-toggle");
     toggle.addEventListener("click", function () {
       var open = side.classList.toggle("open");

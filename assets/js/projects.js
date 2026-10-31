@@ -12,7 +12,7 @@ window.PROJECTS = [
     tags: ["Systems analysis"],
     label: "Case study · IBM capstone",
     summary: "Requirements, traceability, process and data models, and test and release plans for a simulated healthcare provider.",
-    image: "/assets/img/case-study/scheduling-flowchart.png",
+    image: "/assets/img/covers/cover-xyz.jpg",
     featured: true
   },
   {
@@ -21,7 +21,7 @@ window.PROJECTS = [
     tags: ["Systems analysis"],
     label: "University capstone · Project manager",
     summary: "Led a six-person team replacing a paper returns process with a Power Apps app and approval workflow.",
-    image: "/assets/img/projects/tsw-returns.png"
+    image: "/assets/img/covers/cover-tsw.jpg"
   },
   {
     slug: "nashville-housing",
@@ -29,7 +29,7 @@ window.PROJECTS = [
     tags: ["SQL"],
     label: "SQL · Data cleaning",
     summary: "Dates, missing addresses, address splitting and duplicate removal in SQL Server.",
-    image: "/assets/img/projects/nashville-housing.jpg"
+    image: "/assets/img/covers/cover-nashville.jpg"
   },
   {
     slug: "covid-exploration",
@@ -37,7 +37,7 @@ window.PROJECTS = [
     tags: ["SQL"],
     label: "SQL · Exploration",
     summary: "Infection and death rates, rolling vaccinations, CTEs, temp tables and views.",
-    image: "/assets/img/projects/covid-sql.jpg"
+    image: "/assets/img/covers/cover-covid-sql.jpg"
   },
   {
     slug: "covid-dashboard",
@@ -45,7 +45,7 @@ window.PROJECTS = [
     tags: ["Tableau"],
     label: "Tableau · Visualization",
     summary: "Global totals, deaths by continent, an infection map and a forecast by country.",
-    image: "/assets/img/projects/tableau-covid.jpg"
+    image: "/assets/img/covers/cover-tableau.jpg"
   },
   {
     slug: "movie-correlation",
@@ -53,7 +53,7 @@ window.PROJECTS = [
     tags: ["Python"],
     label: "Python · Analysis",
     summary: "Budget (0.74) and votes (0.63) track gross revenue most closely, and studio matters too.",
-    image: "/assets/img/projects/movies.jpg"
+    image: "/assets/img/covers/cover-movies.jpg"
   },
   {
     slug: "amazon-price-scraper",
@@ -61,6 +61,6 @@ window.PROJECTS = [
     tags: ["Python"],
     label: "Python · Data collection",
     summary: "Daily price tracking into a CSV with requests and BeautifulSoup.",
-    image: "/assets/img/projects/amazon.jpg"
+    image: "/assets/img/covers/cover-amazon.jpg"
   }
 ];

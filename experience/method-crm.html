@@ -42,21 +42,20 @@
       <section class="prose">
         <h2>The role</h2>
         <p>Method connects to a business's accounting software and can be customized to fit how that business runs. In Professional Services, clients bought blocks of hours, and I used them to build what they needed: automations, small apps, reports and customer portal changes. Many of my clients were on ongoing monthly plans, so I worked with the same owners over months and helped decide what to build next.</p>
-        <p>I learned the full platform during my probation period, which my manager told me usually takes more than a year.</p>
-        <p>The job was analysis as much as building. Most requests arrived as one sentence, and the work was finding the real rules behind it before writing any logic.</p>
+        <p>Much of the work was analysis. Requests often arrived as a single sentence, so I worked with the client to define the business rules behind them before building anything.</p>
       </section>
 
       <section class="section">
         <h2>How a project ran</h2>
         <ol class="process">
-          <li><h3>Scope</h3><p>A 1 to 2 hour call on the business need, what's feasible, the tasks, what each screen needs, and how the change affects other processes.</p></li>
-          <li><h3>Confirm the plan</h3><p>A summary email with a timeline estimate, an agreement for the estimated hours, time booked in my calendar, and the next meeting set for a demo or a weekly progress review.</p></li>
-          <li><h3>Design</h3><p>Review the meeting notes, map the workflow, and write the plan and technical notes for each screen before building.</p></li>
-          <li><h3>Build</h3><p>Develop the screens and logic. When stuck, check Method's help articles, then ask a teammate. Log exactly what was done each session.</p></li>
-          <li><h3>Test and review</h3><p>Run the whole workflow to make sure nothing breaks, fix the logic, then walk the client through it, answer questions and take feedback.</p></li>
-          <li><h3>Refine and roll out</h3><p>Make the final changes, release to the right users, and follow up at the next meeting on any problems.</p></li>
-          <li><h3>Document</h3><p>Write an SOP and record a video of the process from start to finish for the client's library.</p></li>
-          <li><h3>Grow</h3><p>Scope the next piece of work and recommend upgrades, then repeat.</p></li>
+          <li><h3>Discovery</h3><p>Led a one to two hour discovery session to understand the business need, confirm what the platform could support, break the request into tasks, define the requirements for each screen, and identify impacts on related processes.</p></li>
+          <li><h3>Scope confirmation</h3><p>Sent a written summary with a timeline and hours estimate, secured the client's approval, scheduled the build time, and booked the next touchpoint: a demo or a weekly progress review.</p></li>
+          <li><h3>Solution design</h3><p>Reviewed the discovery notes, mapped the target workflow, and documented the build plan and technical specifications for each screen before development began.</p></li>
+          <li><h3>Build</h3><p>Configured the screens and business logic, drawing on Method's documentation and my teammates' expertise where needed, and logged the work completed in each session.</p></li>
+          <li><h3>Testing and review</h3><p>Tested the full workflow end to end and resolved defects, then demonstrated the solution to the client, answered questions and gathered feedback.</p></li>
+          <li><h3>Refinement and rollout</h3><p>Applied the final changes, released the solution to the appropriate users, and followed up on any issues at the next check-in.</p></li>
+          <li><h3>Documentation</h3><p>Produced a standard operating procedure and a recorded walkthrough for the client's internal library.</p></li>
+          <li><h3>Continuous improvement</h3><p>Scoped the next phase of work and recommended further enhancements, starting the cycle again.</p></li>
         </ol>
       </section>
 
@@ -66,7 +65,7 @@
         <div class="grid-2">
           <article class="card work-card">
             <span class="who">Client A &middot; accounting firm</span>
-            <h3>From "remind people about overdue estimates" to an automated billing reminder</h3>
+            <h3>Turning a one-line request into an automated overdue-estimate reminder</h3>
             <dl>
               <dt>Problem</dt><dd>The firm chased overdue estimates by hand. The request was one line, and one rep could cover several companies, which Method's data model didn't link natively.</dd>
               <dt>What I did</dt><dd>Pinned down the rules before building: what counts as overdue, who gets the email when one rep covers several companies, the table layout, how often it sends, and who is excluded. Then built a table linking companies to a rep, an exception list staff can maintain themselves, and a daily routine that groups overdue totals per company into one email and logs an activity.</dd>
@@ -74,7 +73,7 @@
             </dl>
           </article>
           <article class="card work-card">
-            <span class="who">Client B &middot; small business</span>
+            <span class="who">Client B &middot; general contractor (construction)</span>
             <h3>Time tracking with overtime and escalating reminders</h3>
             <dl>
               <dt>Problem</dt><dd>Time entries had to be split into regular and overtime by hand, and some staff didn't log time at all.</dd>
@@ -101,16 +100,16 @@
             </dl>
           </article>
           <article class="card work-card">
-            <span class="who">Client D &middot; small business</span>
-            <h3>Turning 110 lines of hardcoded rules into about 25</h3>
+            <span class="who">Client D &middot; furniture company</span>
+            <h3>Letting the client manage their own purchase order statuses</h3>
             <dl>
-              <dt>Problem</dt><dd>A previous consultant had hardcoded every purchase order status into one 110+ line action set, so any change meant editing code.</dd>
-              <dt>What I did</dt><dd>Replaced the hardcoding with a settings table where users manage statuses themselves, plus an email and CC template picker.</dd>
-              <dt>Result</dt><dd>Logic cut to roughly 25 lines (about 75% smaller), with a new feature added: a notification email for each status.</dd>
+              <dt>Problem</dt><dd>A previous consultant had hardcoded every purchase order status, and the email that went with it, into a single action set of more than 110 lines. Adding or changing a status meant editing that logic directly.</dd>
+              <dt>What I did</dt><dd>Moved the statuses into a settings table the client's staff can edit themselves, and added a picker for the email template and CC list used by each status. The action set now reads from those settings instead of spelling out every case.</dd>
+              <dt>Result</dt><dd>The logic dropped to about 25 lines, roughly 75% smaller. The client can now add or change statuses without new development, and each status can send its own notification email, which the old version couldn't do.</dd>
             </dl>
           </article>
           <article class="card work-card">
-            <span class="who">Client E &middot; five linked accounts</span>
+            <span class="who">Client E &middot; non-profit with five linked accounts</span>
             <h3>Throwing out a fix that wouldn't scale</h3>
             <dl>
               <dt>Problem</dt><dd>Shipping addresses printed wrong on 3 to 5 reports in each of 5 linked accounts.</dd>

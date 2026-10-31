@@ -48,18 +48,25 @@
 								<li>A requirements traceability matrix linking each requirement to its objective, owner, risk, verification method and test case</li>
 								<li>A WBS (3 phases, 9 work packages), a network diagram with a critical path of about 7 months, a SWOT analysis, and a risk register scored by probability times impact</li>
 							</ul>
+							<figure><a href="/assets/img/case-study/rtm.png" title="Open full size"><img src="/assets/img/case-study/rtm.png" alt="Requirements traceability matrix" loading="lazy"></a><figcaption>Figure 1: Requirements traceability matrix. Each of the eight requirements is traced to its business objective, use case, acceptance criteria, test case, design element and current status.</figcaption></figure>
           </section>
           <section class="step" id="process-and-system-design">
             <h2>Process and system design</h2>
-            <p>I mapped the core process, appointment scheduling, as a swimlane flowchart across Patient Services, the Clinical Department and the Scheduling System. It has five decision points, with loops for a failed login, an unavailable slot, missing fields, invalid input and a failed confirmation.</p>
-							<figure><img src="/assets/img/case-study/scheduling-flowchart.png" alt="Appointment scheduling swimlane flowchart"><figcaption>Figure 1: Appointment scheduling flowchart. It shows every point where a booking can fail and what the system does next, which became the basis for the test cases.</figcaption></figure>
-							<p>I also built a context diagram, a Level 1 data flow diagram, a use case diagram and a sequence diagram for booking an appointment.</p>
-							<figure><img src="/assets/img/case-study/level1-dfd.png" alt="Level 1 data flow diagram"><figcaption>Figure 2: Level 1 DFD with four processes (register patient, book appointment, manage records, process billing) and three data stores. It shows which process reads and writes each store.</figcaption></figure>
+            <p>I started with a use case diagram to agree on who uses the system and for what: five actors and nine use cases, from booking an appointment to maintaining security.</p>
+							<figure><a href="/assets/img/case-study/use-case.png" title="Open full size"><img src="/assets/img/case-study/use-case.png" alt="UML use case diagram for the XYZ Health Solutions IT system" loading="lazy"></a><figcaption>Figure 2: Use case diagram with 5 actors and 9 use cases. Making a payment includes secure payment processing, and updating a record extends viewing it.</figcaption></figure>
+							<p>I mapped the core process, appointment scheduling, as a swimlane flowchart across Patient Services, the Clinical Department and the Scheduling System. It has five decision points, with loops for a failed login, an unavailable slot, missing fields, invalid input and a failed confirmation.</p>
+							<figure><a href="/assets/img/case-study/scheduling-flowchart.png" title="Open full size"><img src="/assets/img/case-study/scheduling-flowchart.png" alt="Appointment scheduling swimlane flowchart" loading="lazy"></a><figcaption>Figure 3: Appointment scheduling flowchart. It shows every point where a booking can fail and what the system does next, which became the basis for the test cases.</figcaption></figure>
+							<p>To show how data moves, I drew a context diagram with the whole system as one process, then broke it into a Level 1 data flow diagram.</p>
+							<figure><a href="/assets/img/case-study/context-dfd.png" title="Open full size"><img src="/assets/img/case-study/context-dfd.png" alt="Context data flow diagram" loading="lazy"></a><figcaption>Figure 4: Context (Level 0) DFD. Patients and staff are the only external entities; everything else happens inside the Patient Management System.</figcaption></figure>
+							<figure><a href="/assets/img/case-study/level1-dfd.png" title="Open full size"><img src="/assets/img/case-study/level1-dfd.png" alt="Level 1 data flow diagram" loading="lazy"></a><figcaption>Figure 5: Level 1 DFD with four processes (register patient, book appointment, manage records, process billing) and three data stores. It shows which process reads and writes each store.</figcaption></figure>
+							<p>Finally, a sequence diagram for booking an appointment shows the order of calls between the patient, the system, the appointment store and the payment gateway.</p>
+							<figure><a href="/assets/img/case-study/sequence.png" title="Open full size"><img src="/assets/img/case-study/sequence.png" alt="Sequence diagram for booking an appointment" loading="lazy"></a><figcaption>Figure 6: Sequence diagram for "Book Appointment". Solid arrows are synchronous calls; the dashed payment call is asynchronous.</figcaption></figure>
           </section>
           <section class="step" id="data-design">
             <h2>Data design</h2>
-            <p>The database has five tables: Patient, Staff, Appointment, Medical Record and Billing, documented in a 24-field data dictionary.</p>
-							<figure><img src="/assets/img/case-study/logical-erd.png" alt="Logical entity relationship diagram"><figcaption>Figure 3: Logical ERD in crow's foot notation, before normalization. Billing still carries PatientID here, which the 3NF step removed.</figcaption></figure>
+            <p>The database has five tables: Patient, Staff, Appointment, Medical Record and Billing, documented in a 24-field data dictionary. I modelled them in two steps: a conceptual ERD with just the entities and relationships, then a logical ERD with keys and attributes.</p>
+							<figure><a href="/assets/img/case-study/conceptual-erd.png" title="Open full size"><img src="/assets/img/case-study/conceptual-erd.png" alt="Conceptual entity relationship diagram" loading="lazy"></a><figcaption>Figure 7: Conceptual ERD. A patient has many appointments and medical records, staff schedule many appointments, and each appointment generates one bill.</figcaption></figure>
+							<figure><a href="/assets/img/case-study/logical-erd.png" title="Open full size"><img src="/assets/img/case-study/logical-erd.png" alt="Logical entity relationship diagram" loading="lazy"></a><figcaption>Figure 8: Logical ERD in crow's foot notation, before normalization. Billing still carries PatientID here, which the 3NF step removed.</figcaption></figure>
 							<p>The key design decision was taking PatientID out of Billing. The patient can already be found through the appointment (BillingID to AppointmentID to PatientID), so keeping it was a transitive dependency. I made AppointmentID unique in Billing to keep one bill per appointment, which brought the design to 3NF. CHECK constraints block negative amounts and invalid status values.</p>
 							<div class="table-wrap">
 								<table>
@@ -84,7 +91,8 @@
 								<li>$135,900 was outstanding, 77% of it on individual accounts</li>
 								<li>55% of patients were in the US, and the New York clinic brought in 39% of recorded revenue</li>
 							</ul>
-							<figure><img src="/assets/img/case-study/powerbi-location-map.png" alt="Power BI map of appointments by location"><figcaption>Figure 4: Power BI map of appointments by location. Most appointments came from the US, in line with the 55% of patients based there.</figcaption></figure>
+							<figure><a href="/assets/img/case-study/powerbi-location-map.png" title="Open full size"><img src="/assets/img/case-study/powerbi-location-map.png" alt="Power BI map of appointments by location"></a><figcaption>Figure 9: Power BI map of appointments by location. Most appointments came from the US, in line with the 55% of patients based there.</figcaption></figure>
+							<figure><a href="/assets/img/case-study/powerbi-branch-age.png" title="Open full size"><img src="/assets/img/case-study/powerbi-branch-age.png" alt="Power BI bar chart of average patient age by branch" loading="lazy"></a><figcaption>Figure 10: Average patient age by branch, from 28 to 50. Each branch had only one patient in the sample, so these are single ages rather than true averages, and more data is needed before comparing branches.</figcaption></figure>
           </section>
           <section class="step" id="testing">
             <h2>Testing</h2>
@@ -113,9 +121,8 @@
             <h2>Impact and what I learned</h2>
             <p>The project produced a full analysis package: charter, BRD, traceability matrix, risk register, process and data models, a test plan and a release plan. The project's targets were 100% HIPAA compliance, 20% fewer scheduling errors, 25% fewer data-entry errors and a 10% rise in patient satisfaction within 12 months. These are targets set in the plan, not measured results.</p>
 							<ul>
-								<li><strong>Read the rubric first.</strong> The rubric asked for fields the lab steps never mentioned. I only caught them because I checked before submitting.</li>
 								<li><strong>Check the math in templates.</strong> The risk scores had been added instead of multiplied. Fixing it moved two risks onto the urgent list.</li>
-								<li><strong>Save every artifact as soon as it's done.</strong> The scheduling flowchart was never saved and had to be rebuilt from the stages table. Now I keep each diagram's source file and image export together.</li>
+								<li><strong>Write the test before the logic.</strong> Writing the lockout tests first, test-driven development style, surfaced the edge cases before any code existed: a slot error shouldn't count as a failed attempt, the attempt counter has to live on the server, and bots need rate limiting.</li>
 								<li><strong>Security shows up in small details.</strong> A generic error message is what stops the system from revealing which patient IDs exist.</li>
 							</ul>
           </section>
