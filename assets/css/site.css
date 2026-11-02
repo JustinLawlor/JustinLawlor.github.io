@@ -94,7 +94,7 @@ p { margin: 0; }
 .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
 
 .feature { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-wrap: wrap; }
-.feature img { flex: 1 1 420px; min-width: 0; height: 300px; object-fit: contain; padding: 16px; background: #FFFFFF; }
+.feature img { flex: 1 1 420px; min-width: 0; aspect-ratio: 16 / 10; height: auto; object-fit: cover; align-self: center; }
 .feature .body { flex: 1 1 360px; padding: 36px; display: flex; flex-direction: column; gap: 12px; }
 .feature h2 { font-size: 28px; }
 
@@ -192,3 +192,4 @@ span.todo { display: inline-block; padding: 2px 8px; border-radius: 6px; }
 .card .role + .muted { margin-top: 0; }
 .thanks { margin-top: 8px; }
 figure a { display: block; cursor: zoom-in; }
+.page-role { font-size: 20px; font-weight: 700; color: var(--text, #1F2937); margin: 4px 0 8px; }
