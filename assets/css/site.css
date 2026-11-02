@@ -203,3 +203,18 @@ span.todo { display: inline-block; padding: 2px 8px; border-radius: 6px; }
 figure a { display: block; cursor: zoom-in; }
 .page-role { font-family: var(--font-head); font-size: 20px; font-weight: 700; color: var(--text); margin: 0; }
 @media (max-width: 900px) { .feature { padding: 28px 24px 28px 28px; } .feature h2 { font-size: 24px; } }
+
+/* Clickable cards: one style for every card that links somewhere */
+.card-click, .project-card { text-decoration: none; color: var(--text); position: relative; overflow: hidden; transition: box-shadow .2s, transform .2s, border-color .2s; }
+.card-click::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: linear-gradient(90deg, var(--accent), var(--highlight)); }
+.card-click:hover, .project-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-3px); border-color: var(--border-strong); color: var(--text); }
+.card-click .go, .project-card .go { margin-top: auto; padding-top: 6px; }
+.card-click .meta + .go { padding-top: 10px; }
+.card-click:focus-visible, .project-card:focus-visible, .feature:focus-visible, .pager a:focus-visible { outline: 3px solid var(--highlight); outline-offset: 3px; }
+
+/* Previous / next links at the bottom of pages, styled as cards */
+.pager { border-top: 0; padding-top: 8px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.pager a { display: flex; align-items: center; min-height: 64px; padding: 18px 22px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); text-decoration: none; color: var(--accent); font-weight: 600; font-size: 15px; transition: box-shadow .2s, transform .2s, border-color .2s; }
+.pager a:last-child { justify-content: flex-end; text-align: right; }
+.pager a:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); border-color: var(--border-strong); }
+@media (max-width: 900px) { .pager { grid-template-columns: minmax(0, 1fr); } .pager a:last-child { justify-content: flex-start; text-align: left; } }
