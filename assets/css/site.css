@@ -218,3 +218,4 @@ figure a { display: block; cursor: zoom-in; }
 .pager a:last-child { justify-content: flex-end; text-align: right; }
 .pager a:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); border-color: var(--border-strong); }
 @media (max-width: 900px) { .pager { grid-template-columns: minmax(0, 1fr); } .pager a:last-child { justify-content: flex-start; text-align: left; } }
+.site-footer .privacy { flex-basis: 100%; font-size: 13px; }

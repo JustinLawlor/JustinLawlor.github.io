@@ -32,7 +32,7 @@
       </section>
       <div class="facts"><div><span class="label">Tutorial</span>Alex the Analyst, <a href="https://www.youtube.com/watch?v=HiOtQMcI5wg">Amazon Web Scraping Using Python</a></div><div><span class="label">Goal</span>Track the price of one product over time</div><div><span class="label">Tools</span>Python, requests, BeautifulSoup, csv, pandas</div><div><span class="label">Data source</span>A public Amazon product page (a pair of headphones)</div><div><span class="label">Full code</span><a href="https://github.com/JustinLawlor/PortforlioProjects/blob/main/Portfolio%20Project%20Webscraping.ipynb">View on GitHub</a></div></div>
       <div class="project-layout">
-        <nav class="toc" aria-label="On this page"><a href="#overview">Why build it</a><a href="#step-1">1. Request the page</a><a href="#step-2">2. Pull out the title and price</a><a href="#step-3">3. Save each run to a CSV</a><a href="#step-4">4. Run it once a day</a><a href="#results">Output and what I learned</a></nav>
+        <nav class="toc" aria-label="On this page"><a href="#overview">Why build it</a><a href="#step-1">1. Request the page</a><a href="#step-2">2. Pull out the title and price</a><a href="#step-3">3. Save each run to a CSV</a><a href="#step-4">4. Run it once a day</a><a href="#results">Results</a></nav>
         <div class="steps">
           <section class="step" id="overview">
             <span class="num">Overview</span>
@@ -42,7 +42,7 @@
           <section class="step" id="step-1">
             <span class="num">Step 1</span>
             <h2>Request the page</h2>
-            <p>Code shortened here; the full version is on GitHub. <strong>What the code does:</strong> sends a request with browser-like headers (Amazon blocks requests that don't look like a browser) and parses the HTML with BeautifulSoup.</p><pre><code>from bs4 import BeautifulSoup
+            <p>Code shortened here; the full version is on GitHub. <strong>What the code does:</strong> sends a request with standard browser headers and parses the HTML with BeautifulSoup.</p><pre><code>from bs4 import BeautifulSoup
 import requests
 
 URL = &#x27;https://www.amazon.com/dp/B08YJ3W1HB&#x27;
@@ -77,9 +77,9 @@ while True:
     time.sleep(86400)</code></pre>
           </section>
           <section class="step" id="results">
-            <span class="num">Results</span>
-            <h2>Output and what I learned</h2>
-            <p>A run on October 30, 2026 added this row to the CSV:</p><div class="table-wrap"><table><thead><tr><th>Title</th><th>Price</th><th>Date</th></tr></thead><tbody><tr><td>Bang &amp; Olufsen Beoplay HX Over-Ear Headphones - Timber</td><td>CAD 1,046.04</td><td>2026-10-30</td></tr></tbody></table></div><p>Each daily run adds one more row, so the file becomes a price history. Amazon showed the price in Canadian dollars because the script ran from Canada.</p><h3>What I learned</h3><ul><li>How to request a web page and pull data out of the HTML with BeautifulSoup.</li><li>How to clean scraped text and save it with a date to a CSV.</li><li>How to automate a script with a loop and a timer.</li><li>Scrapers are fragile: sites change their layout and block automated requests, so they need checking.</li></ul>
+            <span class="num">Outcome</span>
+            <h2>Results</h2>
+            <p>A run on October 30, 2026 added this row to the CSV:</p><div class="table-wrap"><table><thead><tr><th>Title</th><th>Price</th><th>Date</th></tr></thead><tbody><tr><td>Bang &amp; Olufsen Beoplay HX Over-Ear Headphones - Timber</td><td>CAD 1,046.04</td><td>2026-10-30</td></tr></tbody></table></div><p>Each daily run adds one more row, so the file becomes a price history. Amazon showed the price in Canadian dollars because the script ran from Canada.</p><p class="note">Built as a learning exercise. Amazon's terms limit automated scraping, so for real use I'd pull prices through their official Product Advertising API instead.</p><h3>What I learned</h3><ul><li>How to request a web page and pull data out of the HTML with BeautifulSoup.</li><li>How to clean scraped text and save it with a date to a CSV.</li><li>How to automate a script with a loop and a timer.</li><li>Scrapers are fragile: sites change their layout and block automated requests, so they need checking.</li></ul>
           </section>
           <div class="pager"><a href="/projects/">&larr; All projects</a><a href="/projects/xyz-health-solutions.html">Next: Unified IT System for XYZ Health Solutions &rarr;</a></div>
         </div>

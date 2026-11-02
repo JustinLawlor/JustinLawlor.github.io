@@ -32,7 +32,7 @@
       </section>
       <div class="facts"><div><span class="label">Tutorial</span>Alex the Analyst, <a href="https://www.youtube.com/watch?v=8rO7ztF4NtU">Data Cleaning in SQL</a></div><div><span class="label">Goal</span>Make the dataset consistent and usable for analysis</div><div><span class="label">Tools</span>SQL Server (T-SQL)</div><div><span class="label">Data source</span><a href="https://github.com/AlexTheAnalyst/PortfolioProjects/blob/main/Nashville%20Housing%20Data%20for%20Data%20Cleaning.xlsx">Nashville housing dataset</a> (Alex the Analyst)</div><div><span class="label">Full code</span><a href="https://github.com/JustinLawlor/PortforlioProjects/blob/main/Nashville%20Housing%20Data%20Cleaning.sql">View on GitHub</a></div></div>
       <div class="project-layout">
-        <nav class="toc" aria-label="On this page"><a href="#overview">The problem</a><a href="#step-1">1. Standardize the sale date</a><a href="#step-2">2. Fill in missing property addresses</a><a href="#step-3">3. Split the property address into columns</a><a href="#step-4">4. Split the owner address with PARSENAME</a><a href="#step-5">5. Make Yes/No values consistent</a><a href="#step-6">6. Remove duplicate sales</a><a href="#step-7">7. Drop the columns that were replaced</a><a href="#results">What I learned</a></nav>
+        <nav class="toc" aria-label="On this page"><a href="#overview">The problem</a><a href="#step-1">1. Standardize the sale date</a><a href="#step-2">2. Fill in missing property addresses</a><a href="#step-3">3. Split the property address into columns</a><a href="#step-4">4. Split the owner address with PARSENAME</a><a href="#step-5">5. Make Yes/No values consistent</a><a href="#step-6">6. Remove duplicate sales</a><a href="#step-7">7. Drop the columns that were replaced</a><a href="#results">Results</a></nav>
         <div class="steps">
           <section class="step" id="overview">
             <span class="num">Overview</span>
@@ -112,8 +112,8 @@ WHERE row_num &gt; 1;</code></pre><p class="review"><strong>2026 review:</strong
 DROP COLUMN OwnerAddress, TaxDistrict, PropertyAddress, SaleDate;</code></pre>
           </section>
           <section class="step" id="results">
-            <span class="num">Results</span>
-            <h2>What I learned</h2>
+            <span class="num">Outcome</span>
+            <h2>Results</h2>
             <p>The table now has a clean date column, no missing property addresses, separate street, city and state columns, consistent Yes/No values and no duplicate sales.</p><h3>What I learned</h3><ul><li>How to change a table with <code>ALTER TABLE</code> and fill new columns with <code>UPDATE</code>.</li><li>How to join a table to itself to fill gaps using matching rows.</li><li>How to split one text field into several with <code>SUBSTRING</code>, <code>CHARINDEX</code> and <code>PARSENAME</code>.</li><li>How to find and delete duplicates with <code>ROW_NUMBER</code> inside a CTE.</li><li>Looking back: check the new column after every update. A quick look would have caught the address-split bug.</li></ul>
           </section>
           <div class="pager"><a href="/projects/">&larr; All projects</a><a href="/projects/covid-exploration.html">Next: COVID-19 Data Exploration &rarr;</a></div>

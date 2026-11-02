@@ -30,9 +30,9 @@
         <h1>Returns App for a Food Distributor</h1>
         <p class="lead">Replacing a paper returns process with a Power Apps app for a wholesale food distributor, as project manager of a six-person capstone team.</p>
       </section>
-      <div class="facts"><div><span class="label">Role</span>Project Manager, six-person team</div><div><span class="label">When</span>January to April 2023 (ITM 900 capstone, TMU)</div><div><span class="label">Client</span>Toronto Sun Wah Trading, a Toronto food service distributor</div><div><span class="label">Tools</span>Microsoft Power Apps, Power Automate, SharePoint</div></div>
+      <div class="facts"><div><span class="label">Role</span>Project Manager, six-person team</div><div><span class="label">When</span>January to April 2023 (ITM 900 capstone, TMU)</div><div><span class="label">Client</span>A Toronto food service distributor (name withheld)</div><div><span class="label">Tools</span>Microsoft Power Apps, Power Automate, SharePoint</div></div>
       <div class="project-layout">
-        <nav class="toc" aria-label="On this page"><a href="#overview">The problem</a><a href="#step-1">1. Plan the project</a><a href="#step-2">2. Model the process</a><a href="#step-3">3. Design the solution</a><a href="#step-4">4. Plan the rollout and the risks</a><a href="#step-5">5. Build and hand over</a><a href="#results">Outcome and what I learned</a></nav>
+        <nav class="toc" aria-label="On this page"><a href="#overview">The problem</a><a href="#step-1">1. Plan the project</a><a href="#step-2">2. Model the process</a><a href="#step-3">3. Design the solution</a><a href="#step-4">4. Plan the rollout and the risks</a><a href="#step-5">5. Build and hand over</a><a href="#results">Results</a></nav>
         <div class="steps">
           <section class="step" id="overview">
             <span class="num">Overview</span>
@@ -47,7 +47,7 @@
           <section class="step" id="step-2">
             <span class="num">Step 2</span>
             <h2>Model the process</h2>
-            <p>We met with the client to walk through the warehouse and the returns process, then documented five processes: return a product, replace a product, create a returns form, ship items and issue a credit. Each one got a use case model, a detailed use case description (actors, triggers, preconditions, flow and exceptions) and a CRUD analysis.</p><figure><img src="/assets/img/projects/tsw-usecase.png" alt="Use case diagram for the return product process" loading="lazy"><figcaption>Figure 1: Use case diagram for returning a product. It shows who touches a return, from the customer and truck driver through the warehouse, operations and the inventory system ("Unleashed").</figcaption></figure><p>From there we drew as-is and to-be BPMN diagrams for all five processes, a diagnostic of causes, problems and consequences, an ERD and database schema, a class diagram, and a sequence diagram for each use case.</p><figure><img src="/assets/img/projects/tsw-erd.png" alt="Entity relationship diagram for the returns system" loading="lazy"><figcaption>Figure 2: First version of the ERD (week 4). The ReturnForm entity ties each return to an invoice, customer and salesperson. The team revised it in week 6.</figcaption></figure>
+            <p>We met with the client to walk through the warehouse and the returns process, then documented five processes: return a product, replace a product, create a returns form, ship items and issue a credit. Each one got a use case model, a detailed use case description (actors, triggers, preconditions, flow and exceptions) and a CRUD analysis.</p><figure><img src="/assets/img/projects/tsw-usecase.png" alt="Use case diagram for the return product process" loading="lazy"><figcaption>Figure 1: Use case diagram for returning a product. It shows who touches a return, from the customer and truck driver through the warehouse, operations and the inventory system.</figcaption></figure><p>From there we drew as-is and to-be BPMN diagrams for all five processes, a diagnostic of causes, problems and consequences, an ERD and database schema, a class diagram, and a sequence diagram for each use case.</p><figure><img src="/assets/img/projects/tsw-erd.png" alt="Entity relationship diagram for the returns system" loading="lazy"><figcaption>Figure 2: First version of the ERD (week 4). The ReturnForm entity ties each return to an invoice, customer and salesperson. The team revised it in week 6.</figcaption></figure>
           </section>
           <section class="step" id="step-3">
             <span class="num">Step 3</span>
@@ -74,8 +74,8 @@
             <p>The app and its landing pages were finished on March 29, 2023, and the notification automation on April 4. The rollout plan handed the next steps to the client: driver accounts and phone setup, training for drivers, warehouse staff and the coordinator, a one-month trial, then a review of the system and its risks.</p>
           </section>
           <section class="step" id="results">
-            <span class="num">Results</span>
-            <h2>Outcome and what I learned</h2>
+            <span class="num">Outcome</span>
+            <h2>Results</h2>
             <p>Everything came together in a final report of more than 90 pages and a final presentation. The client received a working app and automation that put all return information in one place, with a photo for every return. The trial and review were scheduled to run after the course ended, so there are no measured results to report.</p><h3>What I learned</h3><ul><li>How to lead a team project: a charter and weekly milestones kept six people working toward the same deliverables.</li><li>Start from the people doing the work. Drivers, warehouse staff and the coordinator each needed a different screen.</li><li>A low-code tool can replace a paper process quickly when the requirements are clear.</li><li>A project isn't finished at handover. Training and a trial period have to be planned, not assumed.</li></ul>
           </section>
           <div class="pager"><a href="/projects/">&larr; All projects</a><a href="/projects/nashville-housing.html">Next: Nashville Housing Data Cleaning &rarr;</a></div>

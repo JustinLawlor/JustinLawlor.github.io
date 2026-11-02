@@ -32,7 +32,7 @@
       </section>
       <div class="facts"><div><span class="label">Tutorial</span>Alex the Analyst, <a href="https://www.youtube.com/watch?v=iPYVYBtUTyE">Correlation in Python</a></div><div><span class="label">Goal</span>Find what correlates with gross revenue</div><div><span class="label">Tools</span>Python, pandas, NumPy, seaborn, matplotlib, Jupyter</div><div><span class="label">Data source</span><a href="https://www.kaggle.com/danielgrijalvas/movies">Movie Industry dataset on Kaggle</a>, 7,668 films from 1980 to 2020</div><div><span class="label">Full code</span><a href="https://github.com/JustinLawlor/PortforlioProjects/blob/main/Movie%20Correlation%20Project.ipynb">View on GitHub</a></div></div>
       <div class="project-layout">
-        <nav class="toc" aria-label="On this page"><a href="#overview">The question</a><a href="#step-1">1. Load the data and check for gaps</a><a href="#step-2">2. Fix the release year</a><a href="#step-3">3. Plot budget against gross revenue</a><a href="#step-4">4. Correlation matrix</a><a href="#step-5">5. Does the production company matter?</a><a href="#results">What I found and learned</a></nav>
+        <nav class="toc" aria-label="On this page"><a href="#overview">The question</a><a href="#step-1">1. Load the data and check for gaps</a><a href="#step-2">2. Fix the release year</a><a href="#step-3">3. Plot budget against gross revenue</a><a href="#step-4">4. Correlation matrix</a><a href="#step-5">5. Does the production company matter?</a><a href="#results">Results</a></nav>
         <div class="steps">
           <section class="step" id="overview">
             <span class="num">Overview</span>
@@ -81,8 +81,8 @@ plt.show()</code></pre><figure><img src="/assets/img/projects/movies/heatmap-num
    .sort_values(&#x27;mean&#x27;, ascending=False))</code></pre><p>The averages range from about $60M (TriStar Pictures) to about $295M (Walt Disney Pictures), so company does matter on average. Big studios also spend more, so budget explains part of that gap.</p>
           </section>
           <section class="step" id="results">
-            <span class="num">Results</span>
-            <h2>What I found and learned</h2>
+            <span class="num">Outcome</span>
+            <h2>Results</h2>
             <p>Budget had the strongest relationship with gross revenue (0.74), followed by the number of votes (0.63). Production company matters more than the original version suggested once it is measured properly. About a quarter of films had no budget, and correlation only shows that two things move together, not that one causes the other.</p><h3>What I learned</h3><ul><li>How to load and inspect a dataset in pandas and check how much is missing.</li><li>How to plot relationships with matplotlib and seaborn.</li><li>How to read a correlation matrix, and that correlation is not causation.</li><li>Looking back: check how a test works before trusting its result. The category-code test said company didn't matter, and it did.</li></ul>
           </section>
           <div class="pager"><a href="/projects/">&larr; All projects</a><a href="/projects/amazon-price-scraper.html">Next: Amazon Price Scraper &rarr;</a></div>

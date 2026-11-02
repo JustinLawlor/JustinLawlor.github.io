@@ -47,7 +47,8 @@
   if (foot) {
     foot.className = "site-footer";
     foot.innerHTML = "<span>&copy; " + new Date().getFullYear() + " Justin Lawlor</span>" +
-      '<span><a href="mailto:justin.lawlor889@gmail.com">justin.lawlor889@gmail.com</a></span>';
+      '<span><a href="mailto:justin.lawlor889@gmail.com">justin.lawlor889@gmail.com</a></span>' +
+      '<span class="privacy">This site counts visits anonymously with <a href="https://www.goatcounter.com/">GoatCounter</a>. No cookies, no personal data.</span>';
   }
 
   // Project cards: <div data-projects data-limit="3" data-exclude-featured></div>

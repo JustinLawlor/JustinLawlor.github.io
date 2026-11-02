@@ -32,14 +32,16 @@
       </section>
       <div class="facts"><div><span class="label">Role</span>Systems Analyst (course project, solo)</div><div><span class="label">Timeline</span>About 2 weeks, October 2026</div><div><span class="label">Scope</span>Records, scheduling and billing for a simulated provider</div><div><span class="label">Tools</span>draw.io, Excel, Power BI, MySQL (design)</div></div>
       <div class="project-layout">
-        <nav class="toc" aria-label="On this page"><a href="#the-problem">The problem</a><a href="#requirements-gathering-and-planning">Requirements gathering and planning</a><a href="#process-and-system-design">Process and system design</a><a href="#data-design">Data design</a><a href="#data-analysis">Data analysis</a><a href="#testing">Testing</a><a href="#validation">Validation</a><a href="#deployment-and-monitoring-plan">Deployment and monitoring plan</a><a href="#impact-and-what-i-learned">Impact and what I learned</a></nav>
+        <nav class="toc" aria-label="On this page"><a href="#the-problem">The problem</a><a href="#requirements-gathering-and-planning">1. Requirements gathering and planning</a><a href="#process-and-system-design">2. Process and system design</a><a href="#data-design">3. Data design</a><a href="#data-analysis">4. Data analysis</a><a href="#testing">5. Testing</a><a href="#validation">6. Validation</a><a href="#deployment-and-monitoring-plan">7. Deployment and monitoring plan</a><a href="#impact-and-what-i-learned">Results</a></nav>
         <div class="steps">
           <section class="step" id="the-problem">
+            <span class="num">Overview</span>
             <h2>The problem</h2>
             <p>XYZ Health Solutions ran patient records, appointment scheduling and billing in three separate systems. Staff re-entered data by hand, errors slipped through, nobody had a real-time view of the patient, and the scattered data created HIPAA risk. The goal was one integrated platform on MySQL with a data warehouse and dashboards, under HIPAA governance.</p>
 							<p>The main stakeholders were the CEO (project sponsor), the project lead, the IT director, clinical operations, patient services, a data analyst, and the patients themselves.</p>
           </section>
           <section class="step" id="requirements-gathering-and-planning">
+            <span class="num">Step 1</span>
             <h2>Requirements gathering and planning</h2>
             <p>I planned four ways to gather requirements: patient surveys, clinician workshops, admin interviews and IT technical workshops. From there I wrote:</p>
 							<ul>
@@ -51,6 +53,7 @@
 							<figure><a href="/assets/img/case-study/rtm.png" title="Open full size"><img src="/assets/img/case-study/rtm.png" alt="Requirements traceability matrix" loading="lazy"></a><figcaption>Figure 1: Requirements traceability matrix. Each of the eight requirements is traced to its business objective, use case, acceptance criteria, test case, design element and current status.</figcaption></figure>
           </section>
           <section class="step" id="process-and-system-design">
+            <span class="num">Step 2</span>
             <h2>Process and system design</h2>
             <p>I started with a use case diagram to agree on who uses the system and for what: five actors and nine use cases, from booking an appointment to maintaining security.</p>
 							<figure><a href="/assets/img/case-study/use-case.png" title="Open full size"><img src="/assets/img/case-study/use-case.png" alt="UML use case diagram for the XYZ Health Solutions IT system" loading="lazy"></a><figcaption>Figure 2: Use case diagram with 5 actors and 9 use cases. Making a payment includes secure payment processing, and updating a record extends viewing it.</figcaption></figure>
@@ -63,6 +66,7 @@
 							<figure><a href="/assets/img/case-study/sequence.png" title="Open full size"><img src="/assets/img/case-study/sequence.png" alt="Sequence diagram for booking an appointment" loading="lazy"></a><figcaption>Figure 6: Sequence diagram for "Book Appointment". Solid arrows are synchronous calls; the dashed payment call is asynchronous.</figcaption></figure>
           </section>
           <section class="step" id="data-design">
+            <span class="num">Step 3</span>
             <h2>Data design</h2>
             <p>The database has five tables: Patient, Staff, Appointment, Medical Record and Billing, documented in a 24-field data dictionary. I modelled them in two steps: a conceptual ERD with just the entities and relationships, then a logical ERD with keys and attributes.</p>
 							<figure><a href="/assets/img/case-study/conceptual-erd.png" title="Open full size"><img src="/assets/img/case-study/conceptual-erd.png" alt="Conceptual entity relationship diagram" loading="lazy"></a><figcaption>Figure 7: Conceptual ERD. A patient has many appointments and medical records, staff schedule many appointments, and each appointment generates one bill.</figcaption></figure>
@@ -84,6 +88,7 @@
 							</div>
           </section>
           <section class="step" id="data-analysis">
+            <span class="num">Step 4</span>
             <h2>Data analysis</h2>
             <p>I cleaned 20-record patient and appointment datasets in Excel (duplicates, missing values, date formats, location names) and added age and month fields. Then I built PivotTable charts and Power BI dashboards. Some findings:</p>
 							<ul>
@@ -95,6 +100,7 @@
 							<figure><a href="/assets/img/case-study/powerbi-branch-age.png" title="Open full size"><img src="/assets/img/case-study/powerbi-branch-age.png" alt="Power BI bar chart of average patient age by branch" loading="lazy"></a><figcaption>Figure 10: Average patient age by branch, from 28 to 50. Each branch had only one patient in the sample, so these are single ages rather than true averages, and more data is needed before comparing branches.</figcaption></figure>
           </section>
           <section class="step" id="testing">
+            <span class="num">Step 5</span>
             <h2>Testing</h2>
             <p>I reviewed a draft test plan for the booking requirement (REQ-APPT-01), added missing preconditions, and wrote four new test cases: invalid login, duplicate booking, unauthenticated access and session timeout. I also changed the error messages to a generic "Invalid PatientID or credentials." so the system never reveals which patient IDs exist.</p>
 							<p><strong>TDD objective:</strong> block a PatientID after three failed booking attempts in a row, reject a fourth request during the lockout even with correct credentials, and write the attempt to the audit log.</p>
@@ -109,17 +115,21 @@
 							<p>Edge cases I flagged: picking an unavailable slot should not count as a failed attempt, the failed-attempt count has to be stored on the server so a page refresh can't reset it, and the booking page needs rate limiting against bots.</p>
           </section>
           <section class="step" id="validation">
+            <span class="num">Step 6</span>
             <h2>Validation</h2>
             <p>The final presentation was peer-reviewed against a published rubric. Before submitting, I checked the deck against that rubric and added what was missing: the full traceability matrix columns, risk register fields, test case traceability and edge cases. User acceptance testing with clinic staff is part of the release plan below but was not performed, since this was a course project.</p>
           </section>
           <section class="step" id="deployment-and-monitoring-plan">
+            <span class="num">Step 7</span>
             <h2>Deployment and monitoring plan</h2>
             <p>I designed a 9-stage release pipeline from code commit to post-deployment checks, with automated stages in Jenkins or GitHub Actions and six checkpoints where an analyst reviews the work: requirement check, test results, logs and error messages, UAT sign-off, go/no-go, and the first 24 hours after release.</p>
 							<p>The monitoring plan defines seven metrics with thresholds: uptime, booking error rate, unauthorized access attempts, lockouts, response time, double bookings and audit log health. Alerts would go through Datadog, Slack, PagerDuty and Jira, with a daily, weekly and monthly maintenance checklist and a four-level incident severity workflow. All of this is planned, not running.</p>
           </section>
           <section class="step" id="impact-and-what-i-learned">
-            <h2>Impact and what I learned</h2>
+            <span class="num">Outcome</span>
+            <h2>Results</h2>
             <p>The project produced a full analysis package: charter, BRD, traceability matrix, risk register, process and data models, a test plan and a release plan. The project's targets were 100% HIPAA compliance, 20% fewer scheduling errors, 25% fewer data-entry errors and a 10% rise in patient satisfaction within 12 months. These are targets set in the plan, not measured results.</p>
+							<h3>What I learned</h3>
 							<ul>
 								<li><strong>Check the math in templates.</strong> The risk scores had been added instead of multiplied. Fixing it moved two risks onto the urgent list.</li>
 								<li><strong>Write the test before the logic.</strong> Writing the lockout tests first, test-driven development style, surfaced the edge cases before any code existed: a slot error shouldn't count as a failed attempt, the attempt counter has to live on the server, and bots need rate limiting.</li>
