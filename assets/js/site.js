@@ -52,9 +52,10 @@
 
   // Project cards: <div data-projects data-limit="3" data-exclude-featured></div>
   function card(p) {
+    var tools = (p.tools || []).map(function (t) { return "<span>" + t + "</span>"; }).join("");
     return '<a class="card project-card" href="/projects/' + p.slug + '.html" data-tags="' + p.tags.join("|") + '">' +
-      '<img src="' + p.image + '" alt="" loading="lazy">' +
-      '<div class="pc-body"><span class="tag">' + p.label + "</span><h3>" + p.title + "</h3><p>" + p.summary + "</p></div></a>";
+      '<span class="tag">' + p.label + "</span><h3>" + p.title + "</h3><p>" + p.summary + "</p>" +
+      '<div class="pc-foot"><div class="chips chips-sm">' + tools + '</div><span class="go">View project &rarr;</span></div></a>';
   }
   var all = window.PROJECTS || [];
   document.querySelectorAll("[data-projects]").forEach(function (box) {
