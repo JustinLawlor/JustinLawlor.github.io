@@ -1,6 +1,6 @@
 # justinlawlor.github.io
 
-Portfolio site for Justin Lawlor, business systems analyst.
+Portfolio site for Justin Lawlor: systems analysis, requirements and process design.
 
 Plain HTML, CSS and JavaScript, published with GitHub Pages (see `.github/workflows/deploy.yml`).
 

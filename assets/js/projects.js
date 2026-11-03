@@ -1,9 +1,9 @@
 /*
   Project list for the homepage and the Projects tab.
   To add a project:
-    1. Copy projects/_template.html to projects/<your-slug>.html and fill it in.
+    1. Copy an existing page in projects/ to projects/<your-slug>.html and replace the content.
     2. Add an entry below (newest first). Cards update everywhere automatically.
-  "tags" drive the filter buttons on the Projects tab.
+  "tags" drive the filter buttons on the Projects tab. "tools" are the small chips on each card.
 */
 window.PROJECTS = [
   {
